@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qart — Sleep on it.</title>
+  <meta name="description" content="Qart helps you make more intentional purchases. Screenshot your cart, wait 10 days, then decide. Shop smarter, spend less, regret nothing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    :root {
+      --teal:       #0D7C7C;
+      --teal-light: #4DA8A8;
+      --teal-pale:  #C8E8E8;
+      --teal-ghost: #EEF7F7;
+      --bg:         #F5FAFA;
+      --text:       #1A3D3D;
+      --text-muted: #4E7070;
+      --white:      #FFFFFF;
+      --border:     #D4EBEB;
+      --font-display: "New York", "Iowan Old Style", Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245, 250, 250, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .nav-cta {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--teal);
+      background: transparent;
+      border: 1.5px solid var(--teal);
+      border-radius: 100px;
+      padding: 8px 20px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--teal); color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(ellipse, rgba(77,168,168,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: var(--teal-ghost);
+      border: 1px solid var(--teal-pale);
+      border-radius: 100px;
+      padding: 6px 16px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s ease forwards;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      max-width: 800px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s ease forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 52px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s ease forwards;
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s ease forwards;
+    }
+
+    .waitlist-form input {
+      flex: 1;
+      height: 52px;
+      padding: 0 20px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .waitlist-form input::placeholder { color: var(--text-muted); opacity: 0.6; }
+    .waitlist-form input:focus { border-color: var(--teal-light); }
+
+    .waitlist-form button {
+      height: 52px;
+      padding: 0 28px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      background: var(--teal);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .waitlist-form button:hover { background: #0a6868; transform: translateY(-1px); }
+    .waitlist-form button:active { transform: translateY(0); }
+
+    .hero-social-proof {
+      margin-top: 28px;
+      font-size: 13px;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s ease forwards;
+    }
+
+    .success-msg {
+      display: none;
+      color: var(--teal);
+      font-size: 15px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s ease forwards;
+    }
+
+    .scroll-hint span {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--teal-light), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .section {
+      padding: 100px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 64px;
+      max-width: 520px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .step {
+      background: var(--white);
+      padding: 40px 36px;
+      position: relative;
+    }
+
+    .step:first-child { border-radius: 18px 0 0 18px; }
+    .step:last-child  { border-radius: 0 18px 18px 0; }
+
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--teal-light);
+      margin-bottom: 20px;
+    }
+
+    .step-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--teal-ghost);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .step-icon svg { width: 22px; height: 22px; stroke: var(--teal); }
+
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ── WHY QART ── */
+    .why-section {
+      padding: 60px 24px 100px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .benefit {
+      padding: 36px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .benefit:hover {
+      border-color: var(--teal-pale);
+      transform: translateY(-2px);
+    }
+
+    .benefit-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .benefit h4 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .benefit p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta {
+      padding: 100px 24px;
+      text-align: center;
+      background: var(--teal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bottom-cta::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .bottom-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+
+    .bottom-cta h2 em {
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .bottom-cta p {
+      color: rgba(255,255,255,0.65);
+      font-size: 16px;
+      margin-bottom: 44px;
+      font-weight: 300;
+    }
+
+    .bottom-form {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .bottom-form input {
+      flex: 1;
+      height: 52px;
+      padding: 0 20px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text);
+      background: rgba(255,255,255,0.95);
+      border: none;
+      border-radius: 100px;
+      outline: none;
+    }
+
+    .bottom-form input::placeholder { color: #aaa; }
+
+    .bottom-form button {
+      height: 52px;
+      padding: 0 28px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--teal);
+      background: var(--white);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .bottom-form button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .bottom-success {
+      display: none;
+      color: rgba(255,255,255,0.9);
+      font-size: 15px;
+      font-weight: 400;
+      margin-top: 16px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 16px 20px; }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .step:first-child { border-radius: 18px 18px 0 0; }
+      .step:last-child  { border-radius: 0 0 18px 18px; }
+
+      .benefits-grid { grid-template-columns: 1fr; }
+
+      .waitlist-form { flex-direction: column; }
+      .waitlist-form input, .waitlist-form button { width: 100%; }
+
+      .bottom-form { flex-direction: column; }
+      .bottom-form input, .bottom-form button { width: 100%; }
+
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo" style="display:flex; align-items:center; gap:8px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+        <ellipse cx="50" cy="39" rx="20" ry="21.5" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+        <path d="M69 48 Q73 52 77 65 Q77 78 82 82 Q83 84 85 85" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+        <path d="M31 48 Q27 52 23 65 Q23 78 18 82 Q17 84 15 85" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      Qart
+    </a>
+    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Coming soon to iOS</div>
+
+    <h1>Shop freely.<br><em>Spend intentionally.</em></h1>
+
+    <p class="hero-sub">
+      Screenshot your cart, wait 10 days, then decide. Simple as that.
+    </p>
+
+    <form class="waitlist-form" id="hero-form">
+      <input type="email" placeholder="your@email.com" required />
+      <button type="submit">Notify me</button>
+    </form>
+    <p class="success-msg" id="hero-success">You're on the list. ✓</p>
+    <p class="hero-social-proof">Be first to know when we launch.</p>
+
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <h2 class="section-title">How it works.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg fill="none" stroke-width="1.75" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <path d="M9 9h6M9 12h4"/>
+          </svg>
+        </div>
+        <h3>Screenshot your cart</h3>
+        <p>Find something you want to buy. Instead of checking out, take a screenshot and share it to Qart.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg fill="none" stroke-width="1.75" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 3"/>
+          </svg>
+        </div>
+        <h3>Let it sit</h3>
+        <p>Your item enters a 10-day cooling period. The urge to impulse buy fades. Real desire stays.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg fill="none" stroke-width="1.75" viewBox="0 0 24 24">
+            <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/>
+          </svg>
+        </div>
+        <h3>Decide with clarity</h3>
+        <p>Still want it? Go buy it. Changed your mind? You just saved yourself the money.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WHY QART -->
+  <section class="why-section">
+    <p class="section-label">Why Qart</p>
+    <h2 class="section-title">Built for people who love shopping.</h2>
+
+    <div class="benefits-grid">
+      <div class="benefit">
+        <div class="benefit-dot"></div>
+        <h4>Keep the dopamine</h4>
+        <p>The joy of shopping comes from the hunt, not the haul. Qart preserves that feeling while giving you time to decide if you really need it.</p>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit-dot"></div>
+        <h4>Learn your patterns</h4>
+        <p>Over time, Qart reveals what you're drawn to, what you actually buy, and what you always pass on. A mirror, not a nag.</p>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit-dot"></div>
+        <h4>See what you almost spent</h4>
+        <p>Watch your "not spent" total grow. It's surprisingly satisfying to see the money you kept in your pocket add up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="bottom-cta" id="waitlist">
+    <h2>Be first to<br><em>try it.</em></h2>
+    <p>Join the waitlist and we'll let you know when Qart launches.</p>
+
+    <form class="bottom-form" id="bottom-form">
+      <input type="email" placeholder="your@email.com" required />
+      <button type="submit">Join waitlist</button>
+    </form>
+    <p class="bottom-success" id="bottom-success">You're on the list. We'll be in touch soon. ✓</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+        <ellipse cx="50" cy="39" rx="20" ry="21.5" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+        <path d="M69 48 Q73 52 77 65 Q77 78 82 82 Q83 84 85 85" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+        <path d="M31 48 Q27 52 23 65 Q23 78 18 82 Q17 84 15 85" fill="none" stroke="#0D7C7C" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      <a href="#" class="footer-logo">Qart</a>
+    </div>
+    <p>© 2026 Qart App, LLC</p>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Hero form
+    document.getElementById('hero-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input').value;
+      console.log('Waitlist signup:', email);
+      this.style.display = 'none';
+      document.getElementById('hero-success').style.display = 'block';
+    });
+
+    // Bottom form
+    document.getElementById('bottom-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input').value;
+      console.log('Waitlist signup:', email);
+      this.style.display = 'none';
+      document.getElementById('bottom-success').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
