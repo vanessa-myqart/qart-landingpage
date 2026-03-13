@@ -671,22 +671,51 @@
       nav.classList.toggle('scrolled', window.scrollY > 20);
     });
 
+    // Mailchimp subscribe via hidden form POST (no-cors)
+    const MC_URL = 'https://us11.list-manage.com/subscribe/post?u=a5fa686f85b6468523f8a2f9b&id=1ccfcfbdaf';
+
+    function subscribeToMailchimp(form, successEl, successText) {
+      const email = form.querySelector('input').value;
+      const btn = form.querySelector('button');
+      const origLabel = btn.textContent;
+      btn.textContent = '...';
+      btn.disabled = true;
+
+      const body = new FormData();
+      body.append('EMAIL', email);
+
+      fetch(MC_URL, { method: 'POST', body: body, mode: 'no-cors' })
+        .then(() => {
+          // no-cors returns opaque response, so we assume success
+          form.style.display = 'none';
+          successEl.textContent = successText;
+          successEl.style.display = 'block';
+        })
+        .catch(() => {
+          btn.textContent = origLabel;
+          btn.disabled = false;
+          // Show inline error
+          let err = form.querySelector('.inline-error');
+          if (!err) {
+            err = document.createElement('p');
+            err.className = 'inline-error';
+            err.style.cssText = 'color:#c44;font-size:13px;margin-top:8px;width:100%;text-align:center;';
+            form.appendChild(err);
+          }
+          err.textContent = 'Something went wrong. Please try again.';
+        });
+    }
+
     // Hero form
     document.getElementById('hero-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      const email = this.querySelector('input').value;
-      console.log('Waitlist signup:', email);
-      this.style.display = 'none';
-      document.getElementById('hero-success').style.display = 'block';
+      subscribeToMailchimp(this, document.getElementById('hero-success'), "You're on the list! We'll be in touch. ✓");
     });
 
     // Bottom form
     document.getElementById('bottom-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      const email = this.querySelector('input').value;
-      console.log('Waitlist signup:', email);
-      this.style.display = 'none';
-      document.getElementById('bottom-success').style.display = 'block';
+      subscribeToMailchimp(this, document.getElementById('bottom-success'), "You're on the list! We'll be in touch soon. ✓");
     });
   </script>
 
