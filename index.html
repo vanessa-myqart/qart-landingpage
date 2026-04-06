@@ -155,64 +155,24 @@
       animation: fadeUp 0.7s 0.35s ease forwards;
     }
 
-    .waitlist-form {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      max-width: 420px;
+    .app-store-badge {
       opacity: 0;
       animation: fadeUp 0.7s 0.5s ease forwards;
+      transition: transform 0.15s;
     }
 
-    .waitlist-form input {
-      flex: 1;
-      height: 52px;
-      padding: 0 20px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      color: var(--text);
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: 100px;
-      outline: none;
-      transition: border-color 0.2s;
+    .app-store-badge:hover { transform: translateY(-2px); }
+
+    .app-store-badge img {
+      height: 54px;
     }
 
-    .waitlist-form input::placeholder { color: var(--text-muted); opacity: 0.6; }
-    .waitlist-form input:focus { border-color: var(--teal-light); }
-
-    .waitlist-form button {
-      height: 52px;
-      padding: 0 28px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--white);
-      background: var(--teal);
-      border: none;
-      border-radius: 100px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .waitlist-form button:hover { background: #0a6868; transform: translateY(-1px); }
-    .waitlist-form button:active { transform: translateY(0); }
-
-    .hero-social-proof {
-      margin-top: 28px;
+    .hero-tagline {
+      margin-top: 20px;
       font-size: 13px;
       color: var(--text-muted);
       opacity: 0;
       animation: fadeUp 0.7s 0.65s ease forwards;
-    }
-
-    .success-msg {
-      display: none;
-      color: var(--teal);
-      font-size: 15px;
-      font-weight: 500;
-      margin-top: 4px;
     }
 
     /* ── SCROLL INDICATOR ── */
@@ -417,52 +377,8 @@
       font-weight: 300;
     }
 
-    .bottom-form {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      max-width: 420px;
-      margin: 0 auto;
-    }
-
-    .bottom-form input {
-      flex: 1;
-      height: 52px;
-      padding: 0 20px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      color: var(--text);
-      background: rgba(255,255,255,0.95);
-      border: none;
-      border-radius: 100px;
-      outline: none;
-    }
-
-    .bottom-form input::placeholder { color: #aaa; }
-
-    .bottom-form button {
-      height: 52px;
-      padding: 0 28px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--teal);
-      background: var(--white);
-      border: none;
-      border-radius: 100px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-
-    .bottom-form button:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    .bottom-success {
-      display: none;
-      color: rgba(255,255,255,0.9);
-      font-size: 15px;
-      font-weight: 400;
-      margin-top: 16px;
+    .bottom-cta .app-store-badge img {
+      height: 54px;
     }
 
     /* ── FOOTER ── */
@@ -521,12 +437,6 @@
 
       .benefits-grid { grid-template-columns: 1fr; }
 
-      .waitlist-form { flex-direction: column; }
-      .waitlist-form input, .waitlist-form button { width: 100%; }
-
-      .bottom-form { flex-direction: column; }
-      .bottom-form input, .bottom-form button { width: 100%; }
-
       footer { flex-direction: column; gap: 12px; text-align: center; }
     }
   </style>
@@ -544,12 +454,12 @@
       </svg>
       Qart
     </a>
-    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+    <a href="https://apps.apple.com/us/app/qart-app/id6760491173" class="nav-cta">Download</a>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-eyebrow">Coming soon to iOS</div>
+    <div class="hero-eyebrow">Available on iOS</div>
 
     <h1>Shop freely.<br><em>Spend intentionally.</em></h1>
 
@@ -557,12 +467,10 @@
       Screenshot your cart or paste a product link. Wait out your pause period, then decide. Simple as that.
     </p>
 
-    <form class="waitlist-form" id="hero-form">
-      <input type="email" placeholder="your@email.com" required />
-      <button type="submit">Notify me</button>
-    </form>
-    <p class="success-msg" id="hero-success">You're on the list. ✓</p>
-    <p class="hero-social-proof">Be first to know when we launch.</p>
+    <a href="https://apps.apple.com/us/app/qart-app/id6760491173" class="app-store-badge">
+      <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
+    </a>
+    <p class="hero-tagline">Free on iPhone.</p>
 
     <div class="scroll-hint">
       <div class="scroll-line"></div>
@@ -640,15 +548,13 @@
   </section>
 
   <!-- BOTTOM CTA -->
-  <section class="bottom-cta" id="waitlist">
-    <h2>Be first to<br><em>try it.</em></h2>
-    <p>Join the waitlist and we'll let you know when Qart launches.</p>
+  <section class="bottom-cta">
+    <h2>Ready to<br><em>try it?</em></h2>
+    <p>Download Qart and start shopping more intentionally.</p>
 
-    <form class="bottom-form" id="bottom-form">
-      <input type="email" placeholder="your@email.com" required />
-      <button type="submit">Join waitlist</button>
-    </form>
-    <p class="bottom-success" id="bottom-success">You're on the list. We'll be in touch soon. ✓</p>
+    <a href="https://apps.apple.com/us/app/qart-app/id6760491173" class="app-store-badge">
+      <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
+    </a>
   </section>
 
   <!-- FOOTER -->
@@ -661,7 +567,7 @@
       </svg>
       <a href="#" class="footer-logo">Qart</a>
     </div>
-    <p>© 2026 Qart App, LLC · San Francisco, CA · <a href="/help" style="color:var(--text-muted);text-decoration:none;">Help</a> · <a href="/privacy.html" style="color:var(--text-muted);text-decoration:none;">Privacy Policy</a></p>
+    <p>&copy; 2026 Qart App, LLC &middot; San Francisco, CA &middot; <a href="/help" style="color:var(--text-muted);text-decoration:none;">Help</a> &middot; <a href="/privacy.html" style="color:var(--text-muted);text-decoration:none;">Privacy Policy</a></p>
   </footer>
 
   <script>
@@ -669,53 +575,6 @@
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
-    });
-
-    // Mailchimp subscribe via hidden form POST (no-cors)
-    const MC_URL = 'https://us11.list-manage.com/subscribe/post?u=a5fa686f85b6468523f8a2f9b&id=1ccfcfbdaf';
-
-    function subscribeToMailchimp(form, successEl, successText) {
-      const email = form.querySelector('input').value;
-      const btn = form.querySelector('button');
-      const origLabel = btn.textContent;
-      btn.textContent = '...';
-      btn.disabled = true;
-
-      const body = new FormData();
-      body.append('EMAIL', email);
-
-      fetch(MC_URL, { method: 'POST', body: body, mode: 'no-cors' })
-        .then(() => {
-          // no-cors returns opaque response, so we assume success
-          form.style.display = 'none';
-          successEl.textContent = successText;
-          successEl.style.display = 'block';
-        })
-        .catch(() => {
-          btn.textContent = origLabel;
-          btn.disabled = false;
-          // Show inline error
-          let err = form.querySelector('.inline-error');
-          if (!err) {
-            err = document.createElement('p');
-            err.className = 'inline-error';
-            err.style.cssText = 'color:#c44;font-size:13px;margin-top:8px;width:100%;text-align:center;';
-            form.appendChild(err);
-          }
-          err.textContent = 'Something went wrong. Please try again.';
-        });
-    }
-
-    // Hero form
-    document.getElementById('hero-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      subscribeToMailchimp(this, document.getElementById('hero-success'), "You're on the list! We'll be in touch. ✓");
-    });
-
-    // Bottom form
-    document.getElementById('bottom-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      subscribeToMailchimp(this, document.getElementById('bottom-success'), "You're on the list! We'll be in touch soon. ✓");
     });
   </script>
 
